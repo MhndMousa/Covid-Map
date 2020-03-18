@@ -1,6 +1,7 @@
 var coutnryStats = {};
 var a = [];
 
+// Mapgl properties -----------------------------
 mapboxgl.accessToken =
   "pk.eyJ1IjoibWhuZCIsImEiOiJjamFvOThiNTEzajQ4MnFwbGtxaTlpN3ZqIn0.7N5tTPAHj0A9ZTJuBHvz6w";
 mapboxgl.setRTLTextPlugin(
@@ -9,11 +10,13 @@ mapboxgl.setRTLTextPlugin(
   true // Lazy load the plugin
 );
 
+// Intinsiate Map -----------------------------
 var map = new mapboxgl.Map({
   container: "map",
-  style: "mapbox://styles/mhnd/ck7wvcqxm0nwu1in3wb7ay069/draft"
+  style: "mapbox://styles/mhnd/ck7wvcqxm0nwu1in3wb7ay069"
 });
 
+// When all resources are loaded -----------------------------
 map.on("load", function() {
   fetch("https://corona.lmao.ninja/countries")
     .then(resp => resp.json())
@@ -22,86 +25,76 @@ map.on("load", function() {
         coutnryStats[element["country"]] = element;
         a.push(element["country"]);
       });
-      console.log(coutnryStats);
+      //   geocoder.countries = a;
+      //   console.log(coutnryStats);
     })
     .catch(function(error) {});
-  map.on("mousemove", function(e) {
-    // updateLabels(e.features[0].properties.name)
-    // console.log(e);
-    // document.getElementById("info").innerHTML =
-    //   // e.point is the x, y coordinates of the mousemove event relative
-    //   // to the top-left corner of the map
-    // JSON.stringify(e.point) +
-    //   "<br />" +
-    //   // e.lngLat is the longitude, latitude geographical position of the event
-    //   JSON.stringify(e.lngLat.wrap());
-  });
-  map.addSource("states", {
+
+  //Clickable countries -----------------------------
+  map.addSource("countries", {
     type: "geojson",
-    data:
-      "https://raw.githubusercontent.com/MhndMousa/res/master/countries.geojson"
+    data: "./countries.geojson"
   });
 
-  map.on("click", "states-layer", function(e) {
+  map.on("click", "countries-layer", function(e) {
     console.log(e.features[0].properties.namear);
     updateLabels(
       e.features[0].properties.name,
       e.features[0].properties.namear || e.features[0].properties.name
     );
   });
+
   map.addLayer({
-    id: "states-layer",
+    id: "layer1",
     type: "fill",
-    source: "states",
+    source: "countries",
+    paint: {
+      "fill-color": "rgba(200, 100, 240, 0)"
+    }
+  });
+  map.addLayer({
+    id: "countries-layer",
+    type: "fill",
+    source: "countries",
     paint: {
       "fill-color": "rgba(200, 100, 240, 0)"
     }
   });
 
-  map.on("mouseenter", "states-layer", function() {
+  map.on("mouseenter", "countries-layer", function() {
     map.getCanvas().style.cursor = "pointer";
   });
 
   // Change it back to a pointer when it leaves.
-  map.on("mouseleave", "states-layer", function() {
+  map.on("mouseleave", "countries-layer", function() {
     map.getCanvas().style.cursor = "";
   });
 
+  // Search bar -----------------------------
   var geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     types: "country",
-    // countries: [],
+    language: "ar,en",
     placeholder: "ما هي الدولة التي تود البحث عنها؟",
     mapboxgl: mapboxgl,
     getItemValue: e => {
-      country = e["matching_text"] || e["place_name"];
-      updateLabels(country);
+      console.log(e);
+      country = e["text_en"] ?? e["place_name_en"] ?? e["text"];
+      console.log(e["text_en-US"]);
+
+      updateLabels(country, e["text_ar"]);
     }
   });
 
+  var language = new MapboxLanguage({
+    languageSource: "ar"
+  });
+
   map.addControl(geocoder, "bottom-right");
+  map.addControl(language);
 });
 
-function updateLabels(country, country_in_arabic) {
-  document.getElementById("country_label").innerHTML = country_in_arabic;
-  data = coutnryStats[country];
-
-  if (data == undefined) {
-    document.getElementById("cases").innerHTML = "الحالات : " + "غير معروف";
-    document.getElementById("recovered").innerHTML =
-      "المتعافين : " + "غير معروف";
-    document.getElementById("deaths").innerHTML = "الوفيات : " + "غير معروف";
-    return;
-  }
-
-  cases = String(data.cases).toArabicDigits();
-  recovered = String(data["recovered"]).toArabicDigits();
-  dead = String(data["deaths"]).toArabicDigits();
-  document.getElementById("cases").innerHTML = "الحالات : " + cases;
-  document.getElementById("recovered").innerHTML = "المتعافين : " + recovered;
-  document.getElementById("deaths").innerHTML = "الوفيات : " + dead;
-}
-
+// APIs -----------------------------
 fetch("https://corona.lmao.ninja/all")
   .then(resp => resp.json())
   .then(function(data) {
@@ -179,6 +172,50 @@ fetch("https://corona.lmao.ninja/all")
     document.getElementById("res").appendChild(ref);
   })
   .catch(function(error) {});
+
+// Helpers -----------------------------
+function updateLabels(country, country_in_arabic) {
+  document.getElementById("country_label").innerHTML = country_in_arabic;
+  country = edgeCases(country);
+  data = coutnryStats[country];
+
+  if (data == undefined) {
+    document.getElementById("cases").innerHTML = "الحالات : " + "غير معروف";
+    document.getElementById("recovered").innerHTML =
+      "المتعافين : " + "غير معروف";
+    document.getElementById("deaths").innerHTML = "الوفيات : " + "غير معروف";
+    return;
+  }
+
+  cases = String(data.cases).toArabicDigits();
+  recovered = String(data["recovered"]).toArabicDigits();
+  dead = String(data["deaths"]).toArabicDigits();
+  document.getElementById("cases").innerHTML = "الحالات : " + cases;
+  document.getElementById("recovered").innerHTML = "المتعافين : " + recovered;
+  document.getElementById("deaths").innerHTML = "الوفيات : " + dead;
+}
+
+function edgeCases(c) {
+  console.log(c);
+
+  switch (c.toLowerCase()) {
+    case "United States of America".toLowerCase():
+      return "USA";
+      break;
+    case "United Arab Emirates".toLowerCase():
+      return "UAE";
+      break;
+    case "Republic of Serbia".toLowerCase():
+      return "Serbia";
+      break;
+    case "United Kingdom".toLowerCase():
+      return "UK";
+      break;
+    default:
+      return c;
+      break;
+  }
+}
 
 String.prototype.toArabicDigits = function() {
   var id = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
