@@ -1,5 +1,4 @@
 var coutnryStats = {};
-var a = [];
 
 // Mapgl properties -----------------------------
 mapboxgl.accessToken =
@@ -23,17 +22,15 @@ map.on("load", function() {
     .then(function(data) {
       data.forEach(element => {
         coutnryStats[element["country"]] = element;
-        a.push(element["country"]);
       });
-      //   geocoder.countries = a;
-      //   console.log(coutnryStats);
+      console.log(coutnryStats);
     })
     .catch(function(error) {});
 
   //Clickable countries -----------------------------
   map.addSource("countries", {
     type: "geojson",
-    data: "./countries.geojson"
+    data: "./Asset/countries.geojson"
   });
 
   map.on("click", "countries-layer", function(e) {
@@ -45,19 +42,20 @@ map.on("load", function() {
   });
 
   map.addLayer({
-    id: "layer1",
+    id: "countries-layer",
     type: "fill",
     source: "countries",
     paint: {
       "fill-color": "rgba(200, 100, 240, 0)"
     }
   });
+
   map.addLayer({
-    id: "countries-layer",
+    id: "layer1",
     type: "fill",
     source: "countries",
     paint: {
-      "fill-color": "rgba(200, 100, 240, 0)"
+      "fill-color": "rgba(2, 3, 4, 0)"
     }
   });
 
@@ -75,6 +73,7 @@ map.on("load", function() {
     accessToken: mapboxgl.accessToken,
     types: "country",
     language: "ar,en",
+    // clearOnBlur: true,
     placeholder: "ما هي الدولة التي تود البحث عنها؟",
     mapboxgl: mapboxgl,
     getItemValue: e => {
@@ -83,6 +82,7 @@ map.on("load", function() {
       console.log(e["text_en-US"]);
 
       updateLabels(country, e["text_ar"]);
+      //   geocoder.clear();
     }
   });
 
@@ -99,27 +99,32 @@ fetch("https://corona.lmao.ninja/all")
   .then(resp => resp.json())
   .then(function(data) {
     var countryDiv = document.createElement("div");
+    countryDiv.className = "info";
     countryDiv.id = "country_label";
     countryDiv.innerHTML = "عالمياً";
-    countryDiv.style.fontSize = "15px";
+    countryDiv.style.fontSize = "min(4vw, 15px)";
     countryDiv.style.fontFamily = "'Cairo-bold', sans-serif";
     countryDiv.style.padding = "5px";
     countryDiv.style.color = "white";
 
     var casesDiv = document.createElement("div");
     casesDiv.id = "cases";
+    casesDiv.className = "tags";
     casesDiv.innerHTML = "الحالات : " + String(data["cases"]).toArabicDigits();
     casesDiv.style.background = "gray";
     casesDiv.style.color = "white";
+    casesDiv.style.fontSize = "min(3vw, 10px)";
     casesDiv.style.borderRadius = "5px";
     casesDiv.style.padding = "5px";
     casesDiv.style.margin = "5px";
 
     var rDiv = document.createElement("div");
     rDiv.id = "recovered";
+    rDiv.className = "tags";
     rDiv.innerHTML =
       "المتعافين : " + String(data["recovered"]).toArabicDigits();
     rDiv.style.color = "white";
+    rDiv.style.fontSize = "min(3vw, 10px)";
     rDiv.style.borderRadius = "5px";
     rDiv.style.padding = "5px";
     rDiv.style.margin = "5px";
@@ -127,30 +132,33 @@ fetch("https://corona.lmao.ninja/all")
 
     var dDiv = document.createElement("div");
     dDiv.id = "deaths";
+    dDiv.className = "tags";
     dDiv.innerHTML = "الوفيات : " + String(data["deaths"]).toArabicDigits();
     dDiv.style.color = "white";
+    dDiv.style.fontSize = "min(3vw, 10px)";
     dDiv.style.borderRadius = "5px";
     dDiv.style.padding = "5px";
     dDiv.style.margin = "5px";
     dDiv.style.background = "rgba(250, 30, 0, 0.66)";
 
-    var newDiv = document.createElement("div");
-    let date = moment(Date(data["updated"]));
-    newDiv.innerHTML =
+    var dateDiv = document.createElement("div");
+    let date = moment(data["updated"]);
+    dateDiv.innerHTML =
       "اخر تحديث" +
       "\n" +
       date.locale("ar-sa").format("MMMM Do YYYY") +
       "\n" +
       date.locale("ar-sa").format("h:mm:ss a ") +
-      "\n بتوقيت " +
-      date.locale("ar-sa").format("Z");
-    newDiv.style.color = "white";
-    newDiv.style.borderRadius = "5px";
-    newDiv.style.margin = "5px";
-    newDiv.style.padding = "5px";
-    newDiv.style.background = "rgba(0,0,0,0.66)";
+      "\n بتوقيتك المحلي ";
+    dateDiv.style.color = "white";
+    dateDiv.style.fontSize = "min(3vw, 10px)";
+    dateDiv.style.borderRadius = "5px";
+    dateDiv.style.margin = "5px";
+    dateDiv.style.padding = "5px";
+    dateDiv.style.background = "rgba(0,0,0,0.66)";
 
     ref = document.createElement("a");
+    ref.id = "ref";
     ref.href = "https://www.worldometers.info/coronavirus/";
     ref.innerHTML = "المصدر";
     ref.style.color = "white";
@@ -158,17 +166,60 @@ fetch("https://corona.lmao.ninja/all")
     // ref.style.margin = "5px"
     // ref.style.padding = '5px'
 
+    var todayCases = document.createElement("div");
+    todayCases.id = "todayCases";
+    todayCases.style.display = "none";
+    todayCases.className = "tags";
+    todayCases.innerHTML =
+      "الوفيات : " + String(data["todayCases"]).toArabicDigits();
+    todayCases.style.color = "white";
+    todayCases.style.fontSize = "min(3vw, 10px)";
+    todayCases.style.borderRadius = "5px";
+    todayCases.style.padding = "5px";
+    todayCases.style.margin = "5px";
+    todayCases.style.background = "rgba(20, 120, 0, 0.66)";
+
+    var todayDeaths = document.createElement("div");
+    todayDeaths.id = "todayDeaths";
+    todayDeaths.className = "tags";
+    todayDeaths.innerHTML =
+      "الوفيات : " + String(data["todayDeaths"]).toArabicDigits();
+    todayDeaths.style.color = "white";
+    todayDeaths.style.display = "none";
+    todayDeaths.style.fontSize = "min(3vw, 10px)";
+    todayDeaths.style.borderRadius = "5px";
+    todayDeaths.style.padding = "5px";
+    todayDeaths.style.margin = "5px";
+    todayDeaths.style.background = "rgba(180, 30, 0, 0.66)";
+
+    var critical = document.createElement("div");
+    critical.id = "critical";
+    critical.className = "tags";
+    critical.innerHTML =
+      "الوفيات : " + String(data["critical"]).toArabicDigits();
+
+    critical.style.display = "none";
+    critical.style.color = "white";
+    critical.style.fontSize = "min(3vw, 10px)";
+    critical.style.borderRadius = "5px";
+    critical.style.padding = "5px";
+    critical.style.margin = "5px";
+    critical.style.background = "rgba(250, 0, 0, 0.66)";
+
     var v = document.createElement("div");
     v.style.display = "block";
     // v.style.width= "120px";
     v.append(countryDiv);
-    v.append(casesDiv);
     v.append(rDiv);
+    v.append(casesDiv);
+    v.append(todayCases);
+    v.append(critical);
     v.append(dDiv);
+    v.append(todayDeaths);
 
     let a = document.getElementById("info");
     a.appendChild(v);
-    a.appendChild(newDiv);
+    // a.appendChild(dateDiv);
     document.getElementById("res").appendChild(ref);
   })
   .catch(function(error) {});
@@ -184,12 +235,43 @@ function updateLabels(country, country_in_arabic) {
     document.getElementById("recovered").innerHTML =
       "المتعافين : " + "غير معروف";
     document.getElementById("deaths").innerHTML = "الوفيات : " + "غير معروف";
+
+    document.getElementById("todayCases").innerHTML =
+      "حالات اليوم: " + "غير معروف";
+    document.getElementById("todayDeaths").innerHTML =
+      "وفيات اليوم: " + "غير معروف";
+    document.getElementById("critical").innerHTML =
+      "حالات حرجة: " + "غير معروف";
+
     return;
   }
+  if (
+    document.getElementById("todayCases").style.display == "none" ||
+    document.getElementById("todayDeaths").style.display == "none" ||
+    document.getElementById("critical").style.display == "none"
+  ) {
+    console.log("Here");
 
+    document.getElementById("todayCases").style.setProperty("display", "block");
+    document
+      .getElementById("todayDeaths")
+      .style.setProperty("display", "block");
+    document.getElementById("critical").style.setProperty("display", "block");
+  }
+
+  window.navigator.vibrate(200);
   cases = String(data.cases).toArabicDigits();
   recovered = String(data["recovered"]).toArabicDigits();
   dead = String(data["deaths"]).toArabicDigits();
+  todayCases = String(data["todayCases"]).toArabicDigits();
+  todayDeaths = String(data["todayDeaths"]).toArabicDigits();
+  critical = String(data["critical"]).toArabicDigits();
+
+  document.getElementById("todayCases").innerHTML =
+    "حالات اليوم: " + todayCases;
+  document.getElementById("todayDeaths").innerHTML =
+    "وفيات اليوم: " + todayDeaths;
+  document.getElementById("critical").innerHTML = "حالات حرجة: " + critical;
   document.getElementById("cases").innerHTML = "الحالات : " + cases;
   document.getElementById("recovered").innerHTML = "المتعافين : " + recovered;
   document.getElementById("deaths").innerHTML = "الوفيات : " + dead;
@@ -210,6 +292,9 @@ function edgeCases(c) {
       break;
     case "United Kingdom".toLowerCase():
       return "UK";
+      break;
+    case "South Korea".toLowerCase():
+      return "S. Korea";
       break;
     default:
       return c;

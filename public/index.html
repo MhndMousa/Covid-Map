@@ -4,16 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>خريطة متجددة لانتشار مرض الكورونا</title>
-    <script src="moment.js"></script>
+    <script src="./JS/moment.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
     <!-- update the version number as needed -->
     <script defer src="/__/firebase/7.11.0/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/7.11.0/firebase-auth.js"></script>
-    <script defer src="/__/firebase/7.11.0/firebase-database.js"></script>
-    <script defer src="/__/firebase/7.11.0/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/7.11.0/firebase-storage.js"></script>
+
+<script src="/__/firebase/7.11.0/firebase-analytics.js"></script>
     <!-- initialize the SDK after all desired features are loaded -->
     <script defer src="/__/firebase/init.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js"></script>
 
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js"></script>
     <link
@@ -39,10 +42,11 @@
 
   <body>
     <div id="map">
-    <link rel="stylesheet" href="stuff.css">
-    <script src="map.js"></script>
+    <link rel="stylesheet" href="./CSS/stuff.css">
+    <script src="./JS/map.js"></script>
+    <pre id="res"></pre>
     <pre id="info"></pre>
-    <post id="res"></post>
+    
 </body>
 
 </html>
