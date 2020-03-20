@@ -23,51 +23,71 @@ map.on("load", function() {
       data.forEach(element => {
         coutnryStats[element["country"]] = element;
       });
-      console.log(coutnryStats);
+      console.log("here");
+      document.getElementById("overlay").remove();
     })
     .catch(function(error) {});
-
   //Clickable countries -----------------------------
   map.addSource("countries", {
     type: "geojson",
     data: "./Asset/countries.geojson"
   });
-
   map.on("click", "countries-layer", function(e) {
-    console.log(e.features[0].properties.namear);
+    // console.log(e.features[0].properties.namear);
+    addMarker(e);
     updateLabels(
       e.features[0].properties.name,
       e.features[0].properties.namear || e.features[0].properties.name
     );
   });
 
+  var hoveredStateId = null;
+  map.on("mousemove", "countries-layer", function(e) {
+    // console.log(e);
+    //   if (e.features.length > 0) {
+    //     if (hoveredStateId) {
+    //       map.setFeatureState(
+    //         { source: "countries", id: hoveredStateId },
+    //         { hover: false }
+    //       );
+    //     }
+    //     hoveredStateId = e.features[0].id;
+    //     map.setFeatureState(
+    //       { source: "countries", id: hoveredStateId },
+    //       { hover: true }
+    //     );
+    //   }
+    // });
+    // map.on("mouseleave", "countries-layer", function() {
+    //   if (hoveredStateId) {
+    //     map.setFeatureState(
+    //       { source: "countries", id: hoveredStateId },
+    //       { hover: false }
+    //     );
+    //   }
+    //   hoveredStateId = null;
+  });
   map.addLayer({
     id: "countries-layer",
     type: "fill",
     source: "countries",
     paint: {
-      "fill-color": "rgba(200, 100, 240, 0)"
+      "fill-color": "rgba(30,30,30,0.2)",
+      "fill-opacity": [
+        "case",
+        ["boolean", ["feature-state", "hover"], false],
+        1,
+        0
+      ]
     }
   });
-
-  map.addLayer({
-    id: "layer1",
-    type: "fill",
-    source: "countries",
-    paint: {
-      "fill-color": "rgba(2, 3, 4, 0)"
-    }
-  });
-
-  map.on("mouseenter", "countries-layer", function() {
+  map.on("mouseenter", "countries-layer", function(e) {
     map.getCanvas().style.cursor = "pointer";
   });
-
   // Change it back to a pointer when it leaves.
   map.on("mouseleave", "countries-layer", function() {
     map.getCanvas().style.cursor = "";
   });
-
   // Search bar -----------------------------
   var geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
@@ -76,23 +96,33 @@ map.on("load", function() {
     // clearOnBlur: true,
     placeholder: "ما هي الدولة التي تود البحث عنها؟",
     mapboxgl: mapboxgl,
+    clearAndBlurOnEsc: true,
     getItemValue: e => {
-      console.log(e);
-      country = e["text_en"] ?? e["place_name_en"] ?? e["text"];
-      console.log(e["text_en-US"]);
-
+      // console.log(e);
+      removeMarker();
+      // marker = e;
+      country = e["text_en"] || e["place_name_en"] || e["text"];
+      // console.log(e["text_en-US"]);
       updateLabels(country, e["text_ar"]);
-      //   geocoder.clear();
     }
   });
-
-  var language = new MapboxLanguage({
-    languageSource: "ar"
-  });
-
   map.addControl(geocoder, "bottom-right");
-  map.addControl(language);
 });
+
+var marker;
+function removeMarker() {
+  if (typeof marker !== "undefined") {
+    marker.remove();
+  }
+}
+function addMarker(e) {
+  removeMarker();
+  //add marker
+  console.log("here", e);
+  marker = new mapboxgl.Marker({ color: "#3FB1CE" })
+    .setLngLat([e.lngLat.lng, e.lngLat.lat])
+    .addTo(map);
+}
 
 // APIs -----------------------------
 fetch("https://corona.lmao.ninja/all")
@@ -128,7 +158,7 @@ fetch("https://corona.lmao.ninja/all")
     rDiv.style.borderRadius = "5px";
     rDiv.style.padding = "5px";
     rDiv.style.margin = "5px";
-    rDiv.style.background = "rgba(50, 180, 180, 0.66)";
+    rDiv.style.background = "rgba(0, 180, 180, 0.66)";
 
     var dDiv = document.createElement("div");
     dDiv.id = "deaths";
@@ -177,7 +207,7 @@ fetch("https://corona.lmao.ninja/all")
     todayCases.style.borderRadius = "5px";
     todayCases.style.padding = "5px";
     todayCases.style.margin = "5px";
-    todayCases.style.background = "rgba(20, 120, 0, 0.66)";
+    todayCases.style.background = "rgba(50, 50,50, 0.66)";
 
     var todayDeaths = document.createElement("div");
     todayDeaths.id = "todayDeaths";
@@ -210,12 +240,13 @@ fetch("https://corona.lmao.ninja/all")
     v.style.display = "block";
     // v.style.width= "120px";
     v.append(countryDiv);
-    v.append(rDiv);
+
     v.append(casesDiv);
     v.append(todayCases);
     v.append(critical);
     v.append(dDiv);
     v.append(todayDeaths);
+    v.append(rDiv);
 
     let a = document.getElementById("info");
     a.appendChild(v);
@@ -235,7 +266,6 @@ function updateLabels(country, country_in_arabic) {
     document.getElementById("recovered").innerHTML =
       "المتعافين : " + "غير معروف";
     document.getElementById("deaths").innerHTML = "الوفيات : " + "غير معروف";
-
     document.getElementById("todayCases").innerHTML =
       "حالات اليوم: " + "غير معروف";
     document.getElementById("todayDeaths").innerHTML =
@@ -250,7 +280,7 @@ function updateLabels(country, country_in_arabic) {
     document.getElementById("todayDeaths").style.display == "none" ||
     document.getElementById("critical").style.display == "none"
   ) {
-    console.log("Here");
+    // console.log("Here");
 
     document.getElementById("todayCases").style.setProperty("display", "block");
     document
@@ -259,7 +289,6 @@ function updateLabels(country, country_in_arabic) {
     document.getElementById("critical").style.setProperty("display", "block");
   }
 
-  window.navigator.vibrate(200);
   cases = String(data.cases).toArabicDigits();
   recovered = String(data["recovered"]).toArabicDigits();
   dead = String(data["deaths"]).toArabicDigits();
@@ -278,7 +307,7 @@ function updateLabels(country, country_in_arabic) {
 }
 
 function edgeCases(c) {
-  console.log(c);
+  // console.log(c);
 
   switch (c.toLowerCase()) {
     case "United States of America".toLowerCase():

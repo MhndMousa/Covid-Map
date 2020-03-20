@@ -1,0 +1,115 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <title>خريطة متجددة لانتشار مرض الكورونا</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js"></script>
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Aref+Ruqaa|Cairo&display=swap" rel="stylesheet">
+    <script src="/JS/countries.js"></script>
+    <script src="/JS/moment.js"></script>
+  </head>
+
+  <style>
+      body{
+          direction: "rtl";
+          font-family: 'Cairo', sans-serif;
+      }
+      h5{
+        word-wrap: break-word;
+        display:flex;
+      }
+      .chip{
+        font-size: min(3vw, 10px);
+      }
+      /* label color */
+   .input-field label {
+     color: #000;
+   }
+   /* label focus color */
+   .input-field input[type=text]:focus + label {
+     color: #000;
+   }
+   /* label underline focus color */
+   .input-field input[type=text]:focus {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* valid color */
+   .input-field input[type=text].valid {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* invalid color */
+   .input-field input[type=text].invalid {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* icon prefix focus color */
+   .input-field .prefix.active {
+     color: #7f828c;
+   }
+  </style>
+<body style="background: rgba(245, 245, 245, 1);">
+  <nav> <a href="" class="center brand-logo">Covid 19</a>  </nav>
+  <ul id="slide-out" class="sidenav">
+    <li><div class="user-view">
+      <div class="background">
+        <img src="images/office.jpg">
+      </div>
+      <a href="#user"><img class="circle" src="images/yuna.jpg"></a>
+      <a href="#name"><span class="white-text name">John Doe</span></a>
+      <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a>
+    </div>
+  </li>
+  
+  <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li>
+  <li><a href="#!">Second Link</a></li>
+  <li><div class="divider"></div></li>
+  <li><a class="subheader">Subheader</a></li>
+  <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+</ul>
+
+<a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+<br><br><br> 
+<div class="container" id="list">
+  <div class="row">
+    <div class="col s8 push-s2">
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">search</i>
+            <input type="text" id="autocomplete-input" class="autocomplete">
+            <label for="autocomplete-input">بحث</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row"><div id="result"></div></div>
+    <div class="row" id="row0"></div>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="/__/firebase/7.12.0/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use 
+      https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="/__/firebase/7.12.0/firebase-analytics.js"></script>
+
+  <!-- Initialize Firebase -->
+  <script src="/__/firebase/init.js"></script>
+      
+  <script> firebase.analytics();
+    $(document).ready(function(){
+    $('.sidenav').sidenav();
+    });
+  </script>
+</body>
+</html>

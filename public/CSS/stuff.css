@@ -58,3 +58,11 @@
   opacity: 0;
   max-height: 0;
 }
+.marker {
+  /* background-image: url("mapbox-icon.png"); */
+  background-size: cover;
+  width: 10px;
+  height: 10px;
+  border-radius: 10%;
+  cursor: pointer;
+}
