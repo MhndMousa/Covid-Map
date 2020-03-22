@@ -3,10 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>خريطة متجددة لانتشار مرض الكورونا</title>
+    <title>احصائيات انتشار الكورونا - خريطة تفاعلية</title>
     <script src="./JS/moment.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+        <link
+        rel="stylesheet"
+        href="./CSS/materialize.min.css"
+      />
+  
+      <!-- Compiled and minified JavaScript -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link rel="stylesheet" href="./CSS/stuff.css" />
 
     <script async src="https://www.googletagmanager.com/gtag/js"></script>
@@ -32,92 +40,9 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
-    <style>
-      .lds-roller {
-        display: inline-block;
-        position: relative;
-        width: 80px;
-        height: 80px;
-      }
-      .lds-roller div {
-        animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-        transform-origin: 40px 40px;
-      }
-      .lds-roller div:after {
-        content: " ";
-        display: block;
-        position: absolute;
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: #666;
-        margin: -4px 0 0 -4px;
-      }
-      .lds-roller div:nth-child(1) {
-        animation-delay: -0.036s;
-      }
-      .lds-roller div:nth-child(1):after {
-        top: 63px;
-        left: 63px;
-      }
-      .lds-roller div:nth-child(2) {
-        animation-delay: -0.072s;
-      }
-      .lds-roller div:nth-child(2):after {
-        top: 68px;
-        left: 56px;
-      }
-      .lds-roller div:nth-child(3) {
-        animation-delay: -0.108s;
-      }
-      .lds-roller div:nth-child(3):after {
-        top: 71px;
-        left: 48px;
-      }
-      .lds-roller div:nth-child(4) {
-        animation-delay: -0.144s;
-      }
-      .lds-roller div:nth-child(4):after {
-        top: 72px;
-        left: 40px;
-      }
-      .lds-roller div:nth-child(5) {
-        animation-delay: -0.18s;
-      }
-      .lds-roller div:nth-child(5):after {
-        top: 71px;
-        left: 32px;
-      }
-      .lds-roller div:nth-child(6) {
-        animation-delay: -0.216s;
-      }
-      .lds-roller div:nth-child(6):after {
-        top: 68px;
-        left: 24px;
-      }
-      .lds-roller div:nth-child(7) {
-        animation-delay: -0.252s;
-      }
-      .lds-roller div:nth-child(7):after {
-        top: 63px;
-        left: 17px;
-      }
-      .lds-roller div:nth-child(8) {
-        animation-delay: -0.288s;
-      }
-      .lds-roller div:nth-child(8):after {
-        top: 56px;
-        left: 12px;
-      }
-      @keyframes lds-roller {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    </style>
+<link rel="stylesheet" href="./CSS/loader.css">
+
+     
   </head>
 
   <body>
@@ -125,7 +50,25 @@
 
     <script src="/JS/map.js"></script>
 
-    <pre id="res"></pre>
+    <div id="res">
+
+      <ul id="slide-out" class="sidenav">
+        <li><div class="user-view">
+          <div class="background grey darken-2"></div>
+          <!-- <a href="#user"><img class="circle" src="images/yuna.jpg"></a> -->
+          <span class="white-text name">اخر تحديث للبيانات</span>
+          <span id= "email" class="white-text">none</span>
+        </div>
+      </li>
+      <li><a class="waves-effect" href="index.html"><i class="material-icons">map</i>الخريطة</a></li>
+      <li><a class="waves-effect" href="countries.html"><i class="material-icons">list</i>قائمة الدول</a></li>
+      <li><div class="divider"></div></li>
+      <li><a class="subheader">المعلومات</a></li>
+      <li><a href="https://www.worldometers.info/coronavirus/">مصدر الإحصائيات</a></li>
+    </ul>
+    
+    <a href="#" data-target="slide-out" class="sidenav-trigger white-text"><i class="small material-icons">menu</i></a>
+  </div>
     <pre id="info"></pre>
 
     <div
@@ -139,27 +82,27 @@
     "
     id="overlay"
   >
-    <div
-      class="lds-roller"
-      style=" 
-          height: 80px;
-          width: 80px;
-          border-radius: 5px;
-          position: absolute;
-          top: 45%;
-          bottom: 50%;
-          left: 45%;
-          right: 50%;
-        "
-    >
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+  <div
+  class="lds-roller"
+  style=" 
+      height: 80px;
+      width: 80px;
+      border-radius: 5px;
+      position: absolute;
+      top: 45%;
+      bottom: 50%;
+      left: 45%;
+      right: 50%;
+    "
+>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
     </div>
   </div>
     <!-- The core Firebase JS SDK is always required and must be listed first -->
@@ -172,7 +115,9 @@
     <!-- Initialize Firebase -->
     <script src="/__/firebase/init.js"></script>
     <script>
-      firebase.analytics();
+      firebase.analytics();  $(document).ready(function(){
+    $('.sidenav').sidenav();
+    });
     </script>
   </body>
 </html>

@@ -4,57 +4,8 @@ function animationActivate() {
     draggable: true,
     closeOnClick: true
   });
-
-  // $(".dropdown-button").dropdown({
-  //   belowOrigin: true // Displays dropdown below the button
-  // });
-
-  // $("ul.tabs").tabs();
-  // $(".collapsible").collapsible();
-
-  // $(".modal").modal({
-  //   dismissible: true, // Modal can be dismissed by clicking outside of the modal
-  //   opacity: 0.5, // Opacity of modal background
-  //   inDuration: 300, // Transition in duration
-  //   outDuration: 200, // Transition out duration
-  //   startingTop: "4%", // Starting top style attribute
-  //   endingTop: "10%" // Ending top style attribute
-  //   //   ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
-  //   //     alert("Ready");
-  //   //     console.log(modal, trigger);
-  //   //   },
-  //   //   complete: function() { alert('Closed'); } // Callback for Modal close
-  // });
 }
-function getNav() {
-  $("mheader").append(
-    $("<nav>", { class: "nav white" }).append([
-      $("<div>", { class: "nav-wrapper " }).append(
-        // Logo Picture
-        $("<a>", { href: "#", class: "center brand-logo red-text" }).html(
-          "Covid 19"
-        )
-      )
-    ])
-  );
-}
-
-var row = 0;
-var col = 0;
-var colors = {
-  text: "grey-text ",
-  primary: "amber darken-3 ",
-  textAccent: "text-lighten-1 ",
-  textAccentHeader: "text-lighten-4 "
-};
-
-var coutnryStats = {};
-var countries = {};
-var emojis = {};
-
 function edgeCases(c) {
-  //   console.log(c);
-
   switch (c.toLowerCase()) {
     case "United States of America".toLowerCase():
       return "USA";
@@ -80,6 +31,44 @@ function edgeCases(c) {
   }
 }
 
+var colors = {
+  cases: "background: gray",
+  todayCases: "background: rgba(50, 50,50, 0.7)",
+
+  recovered: "background: rgba(0, 150, 150, 0.7)",
+  critical: "background: rgba(250, 0, 0, 0.7)",
+  deaths: "background: rgba(250, 30, 0, 0.7)",
+  todayDeaths: "background: rgba(180, 30, 0, 0.7)",
+
+  text: "grey-text ",
+  primary: "amber darken-3 ",
+  textAccent: "text-lighten-1 ",
+  textAccentHeader: "text-lighten-4 "
+};
+
+function inArabo(params) {
+  switch (params) {
+    case "cases":
+      return "الحالات";
+    case "todayCases":
+      return "حالات اليوم";
+    case "critical":
+      return "الحالات الحرجة";
+    case "deaths":
+      return "الوفيات";
+    case "todayDeaths":
+      return "وفيات اليوم";
+    case "recovered":
+      return "المتعافين";
+  }
+}
+
+var row = 0;
+var col = 0;
+var coutnryStats = {};
+var countries = {};
+var emojis = {};
+
 fetch("/Asset/countries.geojson")
   .then(resp => resp.json())
   .then(data => {
@@ -103,12 +92,12 @@ fetch("/Asset/countries.geojson")
 
         countries.forEach(element => {
           if (element.namear == e) {
-            let emoji = emojis.find(
-              a => edgeCases(a.name) == edgeCases(element.name)
-            );
+            // let emoji = emojis.find(
+            //   a => edgeCases(a.name) == edgeCases(element.name)
+            // );
             createResultCard(
               e,
-              emoji.emoji || "",
+              "",
               coutnryStats.find(a => a.country == edgeCases(element.name))
             );
             // document.getElementById(element.name).style.display = "block";
@@ -120,34 +109,68 @@ fetch("/Asset/countries.geojson")
   .then(() => {
     // console.log(countries);
 
-    fetch("/Asset/countries-emoji.json")
-      .then(data => data.json())
-      .then(data => {
-        emojis = data;
-      });
+    // fetch("/Asset/countries-emoji.json")
+    //   .then(data => data.json())
+    //   .then(data => {
+    //     emojis = data;
+    //   });
 
     fetch("https://corona.lmao.ninja/countries")
       .then(resp => resp.json())
       .then(data => {
         coutnryStats = data;
+
         populate();
+        document.getElementById("loader").remove();
       });
   });
 
-function populate() {
-  console.log(coutnryStats);
+cases = 0;
+todayCases = 0;
+critical = 0;
+deaths = 0;
+todayDeaths = 0;
+recovered = 0;
 
+function populate() {
   for (let i = 0; i < coutnryStats.length; i++) {
     const e = coutnryStats[i];
+
+    cases = e.cases + cases;
+    document.getElementById("cases").innerHTML = inArabo("cases");
+    $("#cases").append($("<div>").html(cases));
+
+    todayCases = e.todayCases + todayCases;
+    document.getElementById("todayCases").innerHTML = inArabo("todayCases");
+    $("#todayCases").append($("<div>").html(todayCases));
+
+    critical = e.critical + critical;
+    document.getElementById("critical").innerHTML = inArabo("critical");
+    $("#critical").append($("<div>").html(critical));
+
+    deaths = e.deaths + deaths;
+    document.getElementById("deaths").innerHTML = inArabo("deaths");
+    $("#deaths").append($("<div>").html(deaths));
+
+    todayDeaths = e.todayDeaths + todayDeaths;
+    document.getElementById("todayDeaths").innerHTML = inArabo("todayDeaths");
+    $("#todayDeaths").append($("<div>").html(todayDeaths));
+
+    recovered = e.recovered + recovered;
+    document.getElementById("recovered").innerHTML = inArabo("recovered");
+    $("#recovered").append($("<div>").html(recovered));
+
+    console.log(cases, todayCases, critical, deaths, todayDeaths, recovered);
+
     //   console.log(row, col, e.country);
     let element = countries.find(a => edgeCases(a.name) == e.country);
-    var emoji = emojis.find(a => edgeCases(a.name) == e.country);
+    // var emoji = emojis.find(a => edgeCases(a.name) == e.country);
 
-    if (element == undefined || emoji == undefined) {
+    if (element == undefined) {
       continue;
     }
     let name = element.namear || element.name;
-    emoji = emoji.emoji || "";
+    emoji = "";
     if (col < 4) col++;
     else addRow();
 
@@ -160,13 +183,13 @@ function createRowCard(row, name, emoji, element, col_size) {
   $("#row" + row).append(
     $("<div>", { class: col_size }).append(
       $("<a>", {
-        href: element.country,
+        // href: element.country,
         class: "grey-text text-darken-2",
         id: name,
         style: "display: block;"
       }).append(
         $("<ul>", {
-          class: "collection with-header z-depth-4",
+          class: "collection with-header z-depth-3",
           style: "border-radius : 5px"
         }).append([
           $("<li>", {
@@ -174,7 +197,7 @@ function createRowCard(row, name, emoji, element, col_size) {
           }).append($("<h6>").html(name + "\n" + emoji + "\t")),
           $("<li>", {
             class: "collection-item",
-            style: "background :gray"
+            style: colors.cases
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4 "
@@ -188,7 +211,7 @@ function createRowCard(row, name, emoji, element, col_size) {
           ),
           $("<li>", {
             class: "collection-item ",
-            style: "background :rgba(50, 50,50, 0.7)"
+            style: colors.todayCases
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4"
@@ -202,7 +225,21 @@ function createRowCard(row, name, emoji, element, col_size) {
           ),
           $("<li>", {
             class: "collection-item ",
-            style: "background :rgba(250, 0, 0, 0.7)"
+            style: colors.recovered
+          }).append(
+            $("<div>", {
+              class: "grey-text text-lighten-4"
+            })
+              .html(element.recovered)
+              .append(
+                $("<div>", {
+                  class: "secondary-content grey-text text-lighten-4"
+                }).html("المتعافين ")
+              )
+          ),
+          $("<li>", {
+            class: "collection-item ",
+            style: colors.critical
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4"
@@ -216,7 +253,7 @@ function createRowCard(row, name, emoji, element, col_size) {
           ),
           $("<li>", {
             class: "collection-item",
-            style: "background :rgba(250, 30, 0, 0.7)"
+            style: colors.deaths
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4"
@@ -230,7 +267,7 @@ function createRowCard(row, name, emoji, element, col_size) {
           ),
           $("<li>", {
             class: "collection-item ",
-            style: "background :rgba(180, 30, 0, 0.7)"
+            style: colors.todayDeaths
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4"
@@ -240,20 +277,6 @@ function createRowCard(row, name, emoji, element, col_size) {
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
                 }).html("وفيات اليوم ")
-              )
-          ),
-          $("<li>", {
-            class: "collection-item ",
-            style: "background :rgba(0, 150, 150, 0.7)"
-          }).append(
-            $("<div>", {
-              class: "grey-text text-lighten-4"
-            })
-              .html(element.recovered)
-              .append(
-                $("<div>", {
-                  class: "secondary-content grey-text text-lighten-4"
-                }).html("المتعافين ")
               )
           )
         ])
@@ -267,11 +290,12 @@ function createResultCard(name, emoji, element) {
 
   $("#result").empty();
   $("#result").append(
-    $("<div>", { class: "col l8 push-l2" }).append(
+    $("<div>", { class: "col s8 push-s2" }).append(
       $("<a>", {
         // href: element.country,
-        class: "grey-text text-darken-2 waves-effect",
-        id: name
+        class: "grey-text text-darken-2",
+        id: name,
+        style: "display: block;"
       }).append(
         $("<ul>", {
           class: "collection with-header z-depth-4",
@@ -279,10 +303,10 @@ function createResultCard(name, emoji, element) {
         }).append([
           $("<li>", {
             class: "collection-header"
-          }).append($("<h6>").html(name + "\n" + emoji + "\t")),
+          }).append($("<h6>").html(name)),
           $("<li>", {
             class: "collection-item",
-            style: "background :gray"
+            style: colors.cases
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4 "
@@ -296,7 +320,7 @@ function createResultCard(name, emoji, element) {
           ),
           $("<li>", {
             class: "collection-item ",
-            style: "background :rgba(50, 50,50, 0.7)"
+            style: colors.todayCases
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4"
@@ -310,7 +334,21 @@ function createResultCard(name, emoji, element) {
           ),
           $("<li>", {
             class: "collection-item ",
-            style: "background :rgba(250, 0, 0, 0.7)"
+            style: colors.recovered
+          }).append(
+            $("<div>", {
+              class: "grey-text text-lighten-4"
+            })
+              .html(element.recovered)
+              .append(
+                $("<div>", {
+                  class: "secondary-content grey-text text-lighten-4"
+                }).html("المتعافين ")
+              )
+          ),
+          $("<li>", {
+            class: "collection-item ",
+            style: colors.critical
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4"
@@ -324,7 +362,7 @@ function createResultCard(name, emoji, element) {
           ),
           $("<li>", {
             class: "collection-item",
-            style: "background :rgba(250, 30, 0, 0.7)"
+            style: colors.deaths
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4"
@@ -338,7 +376,7 @@ function createResultCard(name, emoji, element) {
           ),
           $("<li>", {
             class: "collection-item ",
-            style: "background :rgba(180, 30, 0, 0.7)"
+            style: colors.todayDeaths
           }).append(
             $("<div>", {
               class: "grey-text text-lighten-4"
@@ -348,20 +386,6 @@ function createResultCard(name, emoji, element) {
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
                 }).html("وفيات اليوم ")
-              )
-          ),
-          $("<li>", {
-            class: "collection-item ",
-            style: "background :rgba(0, 150, 150, 0.7)"
-          }).append(
-            $("<div>", {
-              class: "grey-text text-lighten-4"
-            })
-              .html(element.recovered)
-              .append(
-                $("<div>", {
-                  class: "secondary-content grey-text text-lighten-4"
-                }).html("المتعافين ")
               )
           )
         ])
