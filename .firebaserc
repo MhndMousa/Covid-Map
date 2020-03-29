@@ -1,5 +1,23 @@
 {
   "projects": {
     "default": "covid-fe4e1"
+  },
+  "targets": {
+    "covid-fe4e1": {
+      "hosting": {
+        "ar": [
+          "covid-fe4e1"
+        ],
+        "en": [
+          "en-covid-fe4e1"
+        ],
+        "es": [
+          "es-covid-fe4e1"
+        ],
+        "fr": [
+          "fr-covid-fe4e1"
+        ]
+      }
+    }
   }
 }

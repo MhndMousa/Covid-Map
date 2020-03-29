@@ -7,64 +7,6 @@ function animationActivate() {
 }
 function edgeCases(c) {
   switch (c.toLowerCase()) {
-    case "United Kingdom".toLowerCase():
-      return "UK";
-      break;
-    case "South Korea".toLowerCase():
-      return "S. Korea";
-      break;
-    case "North Korea".toLowerCase():
-      return "N. Korea";
-      break;
-    case "United States".toLowerCase():
-      return "USA";
-      break;
-    case "Hong Kong SAR China".toLowerCase():
-      return "Hong Kong";
-      break;
-    case "United Arab Emirates".toLowerCase():
-      return "UAE";
-      break;
-    case "Palestinian Territories".toLowerCase():
-      return "Palestine";
-      break;
-    case "Bosnia & Herzegovina".toLowerCase():
-      return "Bosnia and Herzegovina";
-      break;
-    case "Macedonia".toLowerCase():
-      return "North Macedonia";
-      break;
-    case "Macau SAR China".toLowerCase():
-      return "Macao";
-      break;
-    case "Congo - Kinshasa".toLowerCase():
-      return "DRC";
-      break;
-    case "St. Martin".toLowerCase():
-      return "Saint Martin";
-      break;
-    case "St. Lucia".toLowerCase():
-      return "Saint Lucia";
-      break;
-    case "St. Barthélemy".toLowerCase():
-      return "St. Barth";
-      break;
-    case "Trinidad & Tobago".toLowerCase():
-      return "Trinidad and Tobago";
-      break;
-    case "Antigua & Barbuda".toLowerCase():
-      return "Antigua and Barbuda";
-      break;
-    case "Côte d’Ivoire".toLowerCase():
-      return "Ivory Coast";
-      break;
-    case "St. Vincent & Grenadines".toLowerCase():
-      return "St. Vincent Grenadines";
-      break;
-    case "Faroe Islands".toLowerCase():
-      return "Faeroe Islands";
-      break;
-
     case "United States of America".toLowerCase():
       return "USA";
       break;
@@ -104,23 +46,6 @@ var colors = {
   textAccentHeader: "text-lighten-4 "
 };
 
-function inArabo(params) {
-  switch (params) {
-    case "cases":
-      return "الحالات";
-    case "todayCases":
-      return "حالات اليوم";
-    case "critical":
-      return "الحالات الحرجة";
-    case "deaths":
-      return "الوفيات";
-    case "todayDeaths":
-      return "وفيات اليوم";
-    case "recovered":
-      return "المتعافين";
-  }
-}
-
 var row = 0;
 var col = 0;
 var coutnryStats = {};
@@ -132,7 +57,7 @@ fetch("/Asset/countries.geojson")
   .then(data => {
     countries = data.features.map(x => x.properties);
     // console.log(countries);
-    arab = countries.map(x => x.namear);
+    arab = countries.map(x => x.name);
     s = {};
     arab.forEach(element => {
       s[element] = null;
@@ -149,7 +74,7 @@ fetch("/Asset/countries.geojson")
         if (e == "") populate();
 
         countries.forEach(element => {
-          if (element.namear == e) {
+          if (element.name == e) {
             // let emoji = emojis.find(
             //   a => edgeCases(a.name) == edgeCases(element.name)
             // );
@@ -195,27 +120,27 @@ function populate() {
     const e = coutnryStats[i];
 
     cases = e.cases + cases;
-    document.getElementById("cases").innerHTML = inArabo("cases");
+    document.getElementById("cases").innerHTML = "Cases";
     $("#cases").append($("<div>").html(cases));
 
     todayCases = e.todayCases + todayCases;
-    document.getElementById("todayCases").innerHTML = inArabo("todayCases");
+    document.getElementById("todayCases").innerHTML = "Today's cases";
     $("#todayCases").append($("<div>").html(todayCases));
 
     critical = e.critical + critical;
-    document.getElementById("critical").innerHTML = inArabo("critical");
+    document.getElementById("critical").innerHTML = "Critical";
     $("#critical").append($("<div>").html(critical));
 
     deaths = e.deaths + deaths;
-    document.getElementById("deaths").innerHTML = inArabo("deaths");
+    document.getElementById("deaths").innerHTML = "Deaths";
     $("#deaths").append($("<div>").html(deaths));
 
     todayDeaths = e.todayDeaths + todayDeaths;
-    document.getElementById("todayDeaths").innerHTML = inArabo("todayDeaths");
+    document.getElementById("todayDeaths").innerHTML = "Today's deaths";
     $("#todayDeaths").append($("<div>").html(todayDeaths));
 
     recovered = e.recovered + recovered;
-    document.getElementById("recovered").innerHTML = inArabo("recovered");
+    document.getElementById("recovered").innerHTML = "Recovered";
     $("#recovered").append($("<div>").html(recovered));
 
     console.log(cases, todayCases, critical, deaths, todayDeaths, recovered);
@@ -227,7 +152,7 @@ function populate() {
     if (element == undefined) {
       continue;
     }
-    let name = element.namear || element.name;
+    let name = element.name;
     emoji = "";
     if (col < 4) col++;
     else addRow();
@@ -260,11 +185,11 @@ function createRowCard(row, name, emoji, element, col_size) {
             $("<div>", {
               class: "grey-text text-lighten-4 "
             })
-              .html(element.cases)
+              .html("Cases")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("الحالات ")
+                }).html(element.cases)
               )
           ),
           $("<li>", {
@@ -274,11 +199,11 @@ function createRowCard(row, name, emoji, element, col_size) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.todayCases)
+              .html("Today's Cases")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("حالات اليوم")
+                }).html(element.todayCases)
               )
           ),
           $("<li>", {
@@ -288,11 +213,11 @@ function createRowCard(row, name, emoji, element, col_size) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.recovered)
+              .html("Recovered")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("المتعافين ")
+                }).html(element.recovered)
               )
           ),
           $("<li>", {
@@ -302,11 +227,11 @@ function createRowCard(row, name, emoji, element, col_size) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.critical)
+              .html("Critical")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("حالات حرجة ")
+                }).html(element.critical)
               )
           ),
           $("<li>", {
@@ -316,11 +241,11 @@ function createRowCard(row, name, emoji, element, col_size) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.deaths)
+              .html("Deaths")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("الوفيات ")
+                }).html(element.deaths)
               )
           ),
           $("<li>", {
@@ -330,11 +255,11 @@ function createRowCard(row, name, emoji, element, col_size) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.todayDeaths)
+              .html("Today's deaths")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("وفيات اليوم ")
+                }).html(element.todayDeaths)
               )
           )
         ])
@@ -369,11 +294,11 @@ function createResultCard(name, emoji, element) {
             $("<div>", {
               class: "grey-text text-lighten-4 "
             })
-              .html(element.cases)
+              .html("Cases")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("الحالات ")
+                }).html(element.cases)
               )
           ),
           $("<li>", {
@@ -383,11 +308,11 @@ function createResultCard(name, emoji, element) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.todayCases)
+              .html("Today's Cases")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("حالات اليوم")
+                }).html(element.todayCases)
               )
           ),
           $("<li>", {
@@ -397,11 +322,11 @@ function createResultCard(name, emoji, element) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.recovered)
+              .html("Recovered")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("المتعافين ")
+                }).html(element.recovered)
               )
           ),
           $("<li>", {
@@ -411,11 +336,11 @@ function createResultCard(name, emoji, element) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.critical)
+              .html("Critical")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("حالات حرجة ")
+                }).html(element.critical)
               )
           ),
           $("<li>", {
@@ -425,11 +350,11 @@ function createResultCard(name, emoji, element) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.deaths)
+              .html("Deaths")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("الوفيات ")
+                }).html(element.deaths)
               )
           ),
           $("<li>", {
@@ -439,11 +364,11 @@ function createResultCard(name, emoji, element) {
             $("<div>", {
               class: "grey-text text-lighten-4"
             })
-              .html(element.todayDeaths)
+              .html("Today's deaths")
               .append(
                 $("<div>", {
                   class: "secondary-content grey-text text-lighten-4"
-                }).html("وفيات اليوم ")
+                }).html(element.todayDeaths)
               )
           )
         ])

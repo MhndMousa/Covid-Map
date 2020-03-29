@@ -4,18 +4,19 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>احصائيات انتشار الكورونا - خريطة تفاعلية</title>
-    <script src="./JS/moment.js"></script>
+    <script src="/JS/moment.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script src="/JS/common.js"></script>
 
-        <link
-        rel="stylesheet"
-        href="./CSS/materialize.min.css"
-      />
-  
-      <!-- Compiled and minified JavaScript -->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <link rel="stylesheet" href="./CSS/stuff.css" />
+    <link rel="stylesheet" href="/CSS/materialize.min.css" />
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="/CSS/stuff.css" />
 
     <script async src="https://www.googletagmanager.com/gtag/js"></script>
 
@@ -40,84 +41,42 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script>
-<link rel="stylesheet" href="./CSS/loader.css">
-
-     
+    <link rel="stylesheet" href="/CSS/loader.css" />
   </head>
 
   <body>
     <div id="map">
-
-    <script src="/JS/map.js"></script>
-
-    <div id="res">
-
-      <ul id="slide-out" class="sidenav">
-        <li><div class="user-view">
-          <div class="background grey darken-2"></div>
-          <!-- <a href="#user"><img class="circle" src="images/yuna.jpg"></a> -->
-          <span class="white-text name">اخر تحديث للبيانات</span>
-          <span id= "email" class="white-text">none</span>
+      <script src="./JS/map.js"></script>
+      <div id="res">
+        <ul id="slide-out" class="sidenav"></ul>
+        <a href="#" data-target="slide-out" class="sidenav-trigger white-text"
+          ><i class="small material-icons">menu</i></a
+        >
+      </div>
+      <pre id="info"></pre>
+      <div id="overlay">
+        <div class="lds-roller">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-      </li>
-      <li><a class="waves-effect" href="index.html"><i class="material-icons">map</i>الخريطة</a></li>
-      <li><a class="waves-effect" href="countries.html"><i class="material-icons">list</i>قائمة الدول</a></li>
-      <li><div class="divider"></div></li>
-      <li><a class="subheader">المعلومات</a></li>
-      <li><a href="https://www.worldometers.info/coronavirus/">مصدر الإحصائيات</a></li>
-    </ul>
-    
-    <a href="#" data-target="slide-out" class="sidenav-trigger white-text"><i class="small material-icons">menu</i></a>
-  </div>
-    <pre id="info"></pre>
-
-    <div
-    style="
-      position: absolute;
-      background-color: rgba(60, 60, 60, 1);
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    "
-    id="overlay"
-  >
-  <div
-  class="lds-roller"
-  style=" 
-      height: 80px;
-      width: 80px;
-      border-radius: 5px;
-      position: absolute;
-      top: 45%;
-      bottom: 50%;
-      left: 45%;
-      right: 50%;
-    "
->
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
+      </div>
     </div>
-  </div>
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="/__/firebase/7.12.0/firebase-app.js"></script>
-
-    <!-- TODO: Add SDKs for Firebase products that you want to use 
-        https://firebase.google.com/docs/web/setup#available-libraries -->
     <script src="/__/firebase/7.12.0/firebase-analytics.js"></script>
-
-    <!-- Initialize Firebase -->
     <script src="/__/firebase/init.js"></script>
     <script>
-      firebase.analytics();  $(document).ready(function(){
-    $('.sidenav').sidenav();
-    });
+      firebase.analytics();
+      $(document).ready(function() {
+        getSideNav();
+        $(".sidenav").sidenav();
+        $(".dropdown-trigger").dropdown();
+      });
     </script>
   </body>
 </html>

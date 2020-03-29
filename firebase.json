@@ -1,9 +1,72 @@
 {
-  "hosting": {
-    "site": "covid-fe4e1",
-    "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "cleanUrls": true,
-    "trailingSlash": true
-  }
+  "hosting": [
+    {
+      "site": "covid-fe4e1",
+      "target": "ar",
+      "public": "thanks",
+      "rewrites": [
+        {
+          "source": "/stats/**",
+          "destination": "/stats/"
+        }
+      ],
+      "redirects": [
+        {
+          "source": "/countries/:post*",
+          "destination": "/countries/stats",
+          "type": 301
+        }
+      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "cleanUrls": true,
+      "trailingSlash": true
+    },
+    {
+      "site": "en-covid-fe4e1",
+      "target": "en",
+      "public": "public-en",
+      "redirects": [
+        {
+          "source": "/countries/:post*",
+          "destination": "/countries/stats",
+          "type": 301
+        }
+      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "cleanUrls": true,
+      "trailingSlash": true
+    },
+
+    {
+      "site": "es-covid-fe4e1",
+      "target": "es",
+      "public": "public-es",
+      "redirects": [
+        {
+          "source": "/countries/:post*",
+          "destination": "/countries/stats",
+          "type": 301
+        }
+      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "cleanUrls": true,
+      "trailingSlash": true
+    },
+
+    {
+      "site": "fr-covid-fe4e1",
+      "target": "fr",
+      "public": "public-fr",
+      "redirects": [
+        {
+          "source": "/countries/:post*",
+          "destination": "/countries/stats",
+          "type": 301
+        }
+      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "cleanUrls": true,
+      "trailingSlash": true
+    }
+  ]
 }

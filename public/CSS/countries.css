@@ -1,0 +1,35 @@
+body {
+  direction: "rtl";
+  font-family: "Cairo", sans-serif;
+}
+h5 {
+  word-wrap: break-word;
+  display: flex;
+}
+/* label color */
+.input-field label {
+  color: #7f828c;
+}
+/* label focus color */
+.input-field input[type="text"]:focus + label {
+  color: #7f828c;
+}
+/* label underline focus color */
+.input-field input[type="text"]:focus {
+  border-bottom: 1px solid #000;
+  box-shadow: 0 1px 0 0 #000;
+}
+#res {
+  display: inline-block;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  min-width: 45px;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  font-family: "Cairo", sans-serif;
+  text-align: center;
+  word-break: break-all;
+  word-wrap: break-word;
+}
