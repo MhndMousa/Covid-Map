@@ -2,7 +2,7 @@ var coutnryStats = {};
 
 // Mapgl properties -----------------------------
 mapboxgl.accessToken =
-  "pk.eyJ1IjoibWhuZCIsImEiOiJjamFvOThiNTEzajQ4MnFwbGtxaTlpN3ZqIn0.7N5tTPAHj0A9ZTJuBHvz6w";
+  "MAPBOX_API_KEY";
 
 // Intinsiate Map -----------------------------
 var map = new mapboxgl.Map({
