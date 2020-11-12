@@ -7,4 +7,5 @@ Uses [Novel Covid API](https://github.com/disease-sh/API) to pull real time data
 # Installation
 
 - Create a firebase project to hose this project
-- Add your Mapbox API key 
+- Add your Mapbox API key in ```public/JS/map.js``` file
+- Add your Mapbox API key in ```public-en/JS/map.js``` file
