@@ -2,7 +2,7 @@ var coutnryStats = {};
 
 // Mapgl properties -----------------------------
 mapboxgl.accessToken =
-  "pk.eyJ1IjoibWhuZCIsImEiOiJjamFvOThiNTEzajQ4MnFwbGtxaTlpN3ZqIn0.7N5tTPAHj0A9ZTJuBHvz6w";
+  "MAPBOX_API_KEY";
 mapboxgl.setRTLTextPlugin(
   "https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-rtl-text/v0.2.3/mapbox-gl-rtl-text.js",
   null,
